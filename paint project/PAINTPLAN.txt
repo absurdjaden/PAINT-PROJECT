@@ -1,0 +1,148 @@
+The PAINT Project Plan
+----------------------------
+Pseudocode - looks like code, but it's NOT (english-like code)
+----------------------------
+
+<setup> (all imports, resolution, colours, variables, load music...)
+pencil
+shapes
+eraser
+stamp - 8 images
+spray paint
+highlighter
+bucket
+
+everytime u lift mouse, canvas is copied, added to a list as a surface,
+if you draw another thing on canvas all ahead of item in list are deleted
+to go back u remove the last screen in the list, forward you add back the removed screen object
+
+
+choose background
+palette is 200x200
+1200x800(1280x960)
+
+tool='no tool' (default value)
+
+while running:
+	<event loop>
+
+	#selecting the tool
+	if <click on pencil tool>:
+		tool='pencil'
+	if <click on eraser tool>:
+		tool='eraser'
+	<more if statements for ALL tools in your program>
+
+
+	#using the tool
+	if <click on canvas>:
+		if tool=='pencil':
+			draw.line(screen,col,(oldmx,oldmy),(mx,my))
+		if tool=='eraser':
+			draw.circle(screen,WHITE,mx,my),10)
+	<more if statements for all other tools>
+	
+	#select (change) colour
+	if <click on colour palette>:
+		col=screen.get_at((mx,my)) #gives the colour of an area
+
+	display.flip()
+quit()
+
+
+
+
+
+
+
+
+from pygame import *
+from random import *
+
+width,height=1200,800
+screen=display.set_mode((width,height))
+
+RED=(255,0,0)
+GREY=(127,127,127)
+BLACK=(0,0,0)
+BLUE=(0,0,255)
+GREEN=(0,255,0)
+YELLOW=(255,255,0)
+WHITE=(255,255,255)
+
+
+
+
+if toolSel:
+        if mb[0]==1 and pencilRect.collidepoint(mx,my):
+            tool='pencil'
+            pencilIcon=pencilUse
+            eraserIcon=eraserRest
+            sprayIcon=sprayRest
+            shapeIcon=shapeRest
+            lineIcon=lineRest
+            bucketIcon=bucketRest
+            highlighterIcon=highlighterRest
+        if mb[0]==1 and eraserRect.collidepoint(mx,my):
+            tool='eraser'
+            pencilIcon=pencilRest
+            eraserIcon=eraserUse
+            sprayIcon=sprayRest
+            shapeIcon=shapeRest
+            lineIcon=lineRest
+            bucketIcon=bucketRest
+            highlighterIcon=highlighterRest
+        if mb[0]==1 and sprayRect.collidepoint(mx,my):
+            tool='spray'
+            pencilIcon=pencilRest
+            eraserIcon=eraserRest
+            sprayIcon=sprayUse
+            shapeIcon=shapeRest
+            lineIcon=lineRest
+            bucketIcon=bucketRest
+            highlighterIcon=highlighterRest
+        if mb[0]==1 and shapeRect.collidepoint(mx,my):
+            tool='shape'
+            pencilIcon=pencilRest
+            eraserIcon=eraserRest
+            sprayIcon=sprayRest
+            shapeIcon=shapeUse
+            lineIcon=lineRest
+            bucketIcon=bucketRest
+            highlighterIcon=highlighterRest
+        if mb[0]==1 and lineRect.collidepoint(mx,my):
+            tool='line'
+            pencilIcon=pencilRest
+            eraserIcon=eraserRest
+            sprayIcon=sprayRest
+            shapeIcon=shapeRest
+            lineIcon=lineUse
+            bucketIcon=bucketRest
+            highlighterIcon=highlighterRest
+        if mb[0]==1 and bucketRect.collidepoint(mx,my):
+            tool='bucket'
+            pencilIcon=pencilRest
+            eraserIcon=eraserRest
+            sprayIcon=sprayRest
+            shapeIcon=shapeRest
+            lineIcon=lineRest
+            bucketIcon=bucketUse
+            highlighterIcon=highlighterRest
+        if mb[0]==1 and highlighterRect.collidepoint(mx,my):
+            tool='highlighter'
+            pencilIcon=pencilRest
+            eraserIcon=eraserRest
+            sprayIcon=sprayRest
+            shapeIcon=shapeRest
+            lineIcon=lineRest
+            bucketIcon=bucketRest
+            highlighterIcon=highlighterUse
+        if mb[0]==1 and undoRect.collidepoint(mx,my):
+            action='undo'
+            undoIcon=undoUse
+            redoIcon=redoRest
+        if mb[0]==1 and redoRect.collidepoint(mx,my):
+            action='redo'
+            redoIcon=redoUse
+            undoIcon=undoRest
+        

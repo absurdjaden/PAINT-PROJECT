@@ -14,16 +14,9 @@ root.withdraw() #hides extra window
 font.init()
 arialFont=font.SysFont('Arial',15)
 font.get_fonts()
-#titleFont=font.SysFont('
 
-RED=(255,0,0)
-GREY=(127,127,127)
 BLACK=(0,0,0)
-BLUE=(0,0,255)
-GREEN=(0,255,0)
-YELLOW=(255,255,0)
 WHITE=(255,255,255)
-
 
 ###loading images
 paletteWheel=image.load('images/colourWheel.jpg')
@@ -54,18 +47,18 @@ stamp2=image.load('stamps/stamp2.png')
 stamp3=image.load('stamps/stamp3.png')
 stamp4=image.load('stamps/stamp4.png')
 stamp5=image.load('stamps/stamp5.png')
-##stamp6=image.load('stamps/stamp6.png')
-##stamp7=image.load('stamps/stamp7.png')
-##stamp8=image.load('stamps/stamp8.png')
+stamp6=image.load('stamps/stamp6.png')
+stamp7=image.load('stamps/stamp7.png')
+stamp8=image.load('stamps/stamp8.png')
 
 stamp1T=image.load('stamps/stamp1T.png')
 stamp2T=image.load('stamps/stamp2T.png')
 stamp3T=image.load('stamps/stamp3T.png')
 stamp4T=image.load('stamps/stamp4T.png')
 stamp5T=image.load('stamps/stamp5T.png')
-##stamp6T=image.load('stamps/stamp6T.png')
-##stamp7T=image.load('stamps/stamp7T.png')
-##stamp8T=image.load('stamps/stamp8T.png')
+stamp6T=image.load('stamps/stamp6T.png')
+stamp7T=image.load('stamps/stamp7T.png')
+stamp8T=image.load('stamps/stamp8T.png')
 
 jeb1=image.load('extras/jebediahView1.png')
 jeb2=image.load('extras/jebediahView2.png')
@@ -207,6 +200,7 @@ oTool=tool
 oAction=action
 size=5 #default size
 col=0,0,0,255 #default colour black
+oCol=col
 r,g,b,a=0,0,0,0 #default values for rgb and alpha(a)
 mx,my=0,0   #default values for mouse pos
 sx,sy=0,0   #default value for starting position
@@ -233,10 +227,8 @@ toolButton=[pencilRect,eraserRect,sprayRect,shapeRect,lineRect,rectRect,brushRec
 iconList=[pencilIcon,eraserIcon,sprayIcon,shapeIcon,lineIcon,rectIcon,brushIcon,eliIcon,openIcon,saveIcon]#list of each icon
 iconListRest=[pencilRest,eraserRest,sprayRest,shapeRest,lineRest,rectRest,brushRest,eliRest,openRest,saveRest]
 iconListUse=[pencilUse,eraserUse,sprayUse,shapeUse,lineUse,rectUse,brushUse,eliUse,openUse,saveUse]
-#stampList=[stamp1,stamp2,stamp3,stamp4,stamp5,stamp6,stamp7,stamp8]
-#stampTList=[stamp1T,stamp2T,stamp3T,stamp4T,stamp5T,stamp6T,stamp7T,stamp8T]
-stampList=[stamp1,stamp2,stamp3,stamp4,stamp5]
-stampTList=[stamp1T,stamp2T,stamp3T,stamp4T,stamp5T]
+stampList=[stamp1,stamp2,stamp3,stamp4,stamp5,stamp6,stamp7,stamp8]
+stampTList=[stamp1T,stamp2T,stamp3T,stamp4T,stamp5T,stamp6T,stamp7T,stamp8T]
 diaText=['Pencil in fine details with this',
          'Erase your mistakes with tool',
          'Spray paint the canvas with this',
@@ -272,7 +264,7 @@ diaText2=['tool',
          'history',
          'scroll to change the page number']
 diaDisp=diaText[0]
-diaDisp2=diaText[0]
+diaDisp2=diaText2[0]
 diaDone=False
 diaChange=True
 jebTimerCount=0
@@ -362,10 +354,8 @@ while running:
 
         if evt.type==MOUSEBUTTONUP:
             if evt.button==1:
-                print(action)
                 if tool!='shape' and tool!='none' or action=='stamp':
                     if mxInCanvas:   #copying screen if the canvas has been altered
-                        print('hi')
                         fwdScreen=screen.subsurface(canvasRect).copy()
                         undoList.append(fwdScreen)
                         mxInCanvas=False
@@ -458,26 +448,28 @@ while running:
                     if stampPg=='2':
                         if stamp1Rect.collidepoint(mx,my):
                             stamp=stampList[4]
-##                        if stamp2Rect.collidepoint(mx,my):
-##                            stamp=stampList[5]
-##                        if stamp3Rect.collidepoint(mx,my):
-##                            stamp=stampList[6]
-##                        if stamp4Rect.collidepoint(mx,my):
-##                            stamp=stampList[7]
+                        if stamp2Rect.collidepoint(mx,my):
+                            stamp=stampList[5]
+                        if stamp3Rect.collidepoint(mx,my):
+                            stamp=stampList[6]
+                        if stamp4Rect.collidepoint(mx,my):
+                            stamp=stampList[7]
 
                 if action=='stamp':
                     if mb[0]==1 and canvasRect.collidepoint(mx,my):
                         cw=stamp.get_width()
                         ch=stamp.get_height()
                         screen.blit(stamp,(mx-cw/2,my-ch/2))
-                        #fwdScreen=screen.subsurface(canvasRect).copy()
-                        #undoList.append(fwdScreen)
                 screen.set_clip(None)
                     
-            if opened:
-                fwdScreen=screen.subsurface(canvasRect).copy()
-                undoList.append(fwdScreen)
-                opened=False
+            #if opened:
+                #fwdScreen=screen.subsurface(canvasRect).copy()
+##                redoList*=0 #clearing the list
+##                redoList.append(bgList[0])
+##                undoList*=0
+##                fwdScreen=screen.subsurface(canvasRect).copy()
+##                undoList.append(fwdScreen) #######
+##                opened=False
             if bgChanged:
                 fwdScreen=screen.subsurface(canvasRect).copy()
                 bgChanged=False
@@ -515,17 +507,23 @@ while running:
 
     if stampPg=='2':
         screen.blit(stampTList[4],(738,603,75,75))
-        #screen.blit(stampTList[5],(738,687,75,75))
-        #screen.blit(stampTList[6],(823,603,75,75))
-        #screen.blit(stampTList[7],(823,687,75,75))
+        screen.blit(stampTList[5],(738,687,75,75))
+        screen.blit(stampTList[6],(823,603,75,75))
+        screen.blit(stampTList[7],(823,687,75,75))
 
-    if openChange:
+    if openChange: #changing bg list to default values
         bgList=[bg0,bg1,bg2,bg3,bg4,bg5]
         bgTList=[bg0T,bg1T,bg2T,bg3T,bg4T,bg5T]
         screen.blit(bgTList[1],(955,15,90,50))
         screen.blit(bgTList[-1],(1025,15,90,50))
         screen.blit(bgList[0],canvasRect)
+        screen.blit(myPic,(150+distX,80+distY,900,500)) #putting image in the center of canvas
         openChange=False
+        redoList*=0 #clearing the list
+        redoList.append(bgList[-1])
+        undoList*=0
+        fwdScreen=screen.subsurface(canvasRect).copy()
+        undoList.append(fwdScreen) #######
     if bgChange:
         screen.blit(bgTList[1],(955,15,90,50))
         screen.blit(bgTList[-1],(1025,15,90,50))
@@ -596,6 +594,7 @@ while running:
                 
     if openSave:
         if mb[0]==1 and openRect.collidepoint(mx,my):
+            action='open'
             try:
                 screen.set_clip(canvasRect)
                 fName=filedialog.askopenfilename()
@@ -609,7 +608,7 @@ while running:
                     widthPic=myPic.get_width()
                     heightPic=myPic.get_height()
                 if heightPic>500: #if height of image is greater than canvas size,
-                    factorH=heightPic/500   #image is scalled so the hiehgt fits on canvas, 
+                    factorH=heightPic/500   #image is scalled so the height fits on canvas, 
                     myPic=transform.smoothscale(myPic,(int(widthPic/factorH),int(heightPic/factorH)))
                     widthPic=myPic.get_width()
                     heightPic=myPic.get_height()
@@ -620,12 +619,18 @@ while running:
                 screen.set_clip(None)
                 openChange=True
                 opened=True
+                diaDisp=diaText[8]
+                diaDisp2=diaText2[8]
+                diaDone=True
+                
             except:
                 print('opening error')
                 diaDisp=diaText[8]
+                diaDisp2=diaText2[8]
                 diaDone=True
 
         if mb[0]==1 and saveRect.collidepoint(mx,my):
+            action='save'
             try:
                 fName=filedialog.asksaveasfilename(defaultextension='.png')
                 image.save(screen.subsurface(canvasRect).copy(),fName)
@@ -719,9 +724,6 @@ while running:
         if size>10:
             size=10
 
-###stamp preview
-    #print(action,oAction,tool,oTool)
-    
     tTool=tool
     if action=='stamp':
         oAction=action
@@ -735,9 +737,10 @@ while running:
         screen.set_clip(None)
         stampDone=True
     
-    if tTool!=oTool:
-        action='none'
-        screen.blit(undoList[-1],canvasRect)
+    if toolRect.collidepoint(mx,my) and mb[0]==1 or col!=oCol or colDisplay:
+        if action!='none':
+            action='none'
+            screen.blit(undoList[-1],canvasRect)
         
 ###using tool
     if canvasRect.collidepoint(mx,my) and mb[0]==1:
@@ -843,9 +846,16 @@ while running:
     omy=my
     oTool=tool
     oAction=action
+    oCol=col
     oDiaDisp=diaDisp
     if diaDone!=True:
         if topSel1 or openSave1 or leftRight1 or paletteSel1 or colDisplay or stampSel1:
+            if action=='open':
+                diaDisp=diaText[8]
+                diaDisp2=diaText2[8]
+            if action=='save':
+                diaDisp=diaText[9]
+                diaDisp2=diaText2[9]
             if action=='undo':
                 diaDisp=diaText[10]
                 diaDisp2=diaText2[10]
@@ -861,6 +871,7 @@ while running:
             if action=='stamp':
                 diaDisp=diaText[16]
                 diaDisp2=diaText2[16]
+            
         else:
             for x in range(len(toolList)):
                 if tool==toolList[x]:
@@ -871,7 +882,6 @@ while running:
         undoList.append(bgList[0])
         redoList*=0
         redoList.append(bgList[0])
-        bgChanged=True
         
     if oDiaDisp!=diaDisp:
         diaChange=True
@@ -895,5 +905,6 @@ while running:
         jebTimerCount=0
     #print(action,diaDisp,diaDisp2)
     #print(tool,tTool)
-    print(tool,action)
+    #print(tool,action)
+    
 quit()

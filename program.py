@@ -4,18 +4,15 @@ from tkinter import *
 from tkinter import filedialog
 from math import *
 
-
-# center cursor in stamps, fix blitting of stamps when u have tool
-
 width,height=1200,800
 screen=display.set_mode((width,height))
 root=Tk()
 root.withdraw() #hides extra window
-font.init()
-arialFont=font.SysFont('Arial',15)
+font.init() 
+arialFont=font.SysFont('Arial',15) #font of the paint project
 font.get_fonts()
 
-BLACK=(0,0,0)
+BLACK=(0,0,0) 
 WHITE=(255,255,255)
 
 ###loading images
@@ -98,6 +95,7 @@ eliFUse=image.load('tools/eliFUse.png')
 leftUse=image.load('tools/leftUse.png')
 rightUse=image.load('tools/rightUse.png')
 
+#setting default state for each icon
 pencilIcon=pencilRest
 eraserIcon=eraserRest
 sprayIcon=sprayRest
@@ -115,7 +113,7 @@ eliFIcon=eliFRest
 leftIcon=leftRest
 rightIcon=rightRest
 
-jebIcon=jeb1
+jebIcon=jeb1 
 
 ###setting up rect objects
 canvasRect=Rect(150,80,900,500)
@@ -157,7 +155,7 @@ openSaveRect=Rect(1065,80,85,185)
 leftRightRect=Rect(915,15,220,50)
 
 ###displaying images
-screen.blit(programBackground,(0,0))
+screen.blit(programBackground,(0,0)) 
 screen.blit(paletteWheel,paletteRect)
 draw.rect(screen,WHITE,canvasRect)
 
@@ -196,8 +194,8 @@ tool='none' #tool selection default is none
 action='none' #action selection default is none
 omx,omy=0,0 #setting value
 tTool=tool #temporary tool for stamps
-oTool=tool
-oAction=action
+oTool=tool 
+oAction=action 
 size=5 #default size
 col=0,0,0,255 #default colour black
 oCol=col
@@ -206,30 +204,26 @@ mx,my=0,0   #default values for mouse pos
 sx,sy=0,0   #default value for starting position
 empty=screen.subsurface(canvasRect).copy()  #default starting canvas
 screenCap=empty     #original canvas 
-bg0=empty
+bg0=empty #empty screen for default background
 jebCount=0
 jebMulti=1
 stampPg='1'
-stamp=stamp1
+stamp=stamp1 #active stamp is first stamp
 
-colList=[(1,0,0,255),(0,1,0,255),(0,0,1,255),(1,1,0,255),(0,0,0,255)]
+colList=[(1,0,0,255),(0,1,0,255),(0,0,1,255),(1,1,0,255),(0,0,0,255)] #first colour on colour history palette
 undoList=[empty] #undo when you press undo the most recent item added is blitted
 redoList=[empty] #redo when you press redo the most recent item added is blitted
 shapeList=[]     #coordinates for the shape tool
-#stampList=[stamp1,stamp2,stamp3,stamp4,stamp5,stamp6,stamp7,stamp8]
-stampList=[stamp1,stamp2,stamp3,stamp4,stamp5]
-bgList=[bg0,bg1,bg2,bg3,bg4,bg5]
-oBgList=bgList
-bgTList=[bg0T,bg1T,bg2T,bg3T,bg4T,bg5T]
-oBgTList=bgTList
+bgList=[bg0,bg1,bg2,bg3,bg4,bg5] #list of backgrounds
+bgTList=[bg0T,bg1T,bg2T,bg3T,bg4T,bg5T] #list of background thumbnails
 toolList=['pencil','eraser','spray','shape','line','rect','brush','eli','open','save'] #list of each tool
 toolButton=[pencilRect,eraserRect,sprayRect,shapeRect,lineRect,rectRect,brushRect,eliRect,openRect,saveRect]#list of each tool Rect
 iconList=[pencilIcon,eraserIcon,sprayIcon,shapeIcon,lineIcon,rectIcon,brushIcon,eliIcon,openIcon,saveIcon]#list of each icon
-iconListRest=[pencilRest,eraserRest,sprayRest,shapeRest,lineRest,rectRest,brushRest,eliRest,openRest,saveRest]
-iconListUse=[pencilUse,eraserUse,sprayUse,shapeUse,lineUse,rectUse,brushUse,eliUse,openUse,saveUse]
-stampList=[stamp1,stamp2,stamp3,stamp4,stamp5,stamp6,stamp7,stamp8]
-stampTList=[stamp1T,stamp2T,stamp3T,stamp4T,stamp5T,stamp6T,stamp7T,stamp8T]
-diaText=['Pencil in fine details with this',
+iconListRest=[pencilRest,eraserRest,sprayRest,shapeRest,lineRest,rectRest,brushRest,eliRest,openRest,saveRest] #list of icons in rest
+iconListUse=[pencilUse,eraserUse,sprayUse,shapeUse,lineUse,rectUse,brushUse,eliUse,openUse,saveUse] #list of icon in use
+stampList=[stamp1,stamp2,stamp3,stamp4,stamp5,stamp6,stamp7,stamp8] #list of stamps
+stampTList=[stamp1T,stamp2T,stamp3T,stamp4T,stamp5T,stamp6T,stamp7T,stamp8T] #list of stamp thumbnails
+diaText=['Pencil in fine details with this', #dialogue box text for line 1
          'Erase your mistakes with tool',
          'Spray paint the canvas with this',
          'Left click to select points,',
@@ -246,7 +240,7 @@ diaText=['Pencil in fine details with this',
          'Select a colour from within the',
          'Select a colour from the colour',
          'Select a stamp with left click,']
-diaText2=['tool',
+diaText2=['tool',                           #dialogue box text for line 2
          '',
          'tool',
          'then right click to complete',
@@ -262,16 +256,18 @@ diaText2=['tool',
          'selection',
          'range',
          'history',
-         'scroll to change the page number']
-diaDisp=diaText[0]
+         'scroll to change the pg. number']
+#more default values
+diaDisp=diaText[0]      
 diaDisp2=diaText2[0]
 diaDone=False
 diaChange=True
 jebTimerCount=0
-
+#blitting more images
 screen.blit(bgTList[1],(955,15,90,50))
 screen.blit(bgTList[-1],(1025,15,90,50))
 screen.blit(jeb1,(1120,650,175,155))
+
 while running:
     for evt in event.get():
         if evt.type==QUIT:
@@ -287,7 +283,7 @@ while running:
                     paletteSel=True
                 else:
                     paleteSel=False
-                if colDisplayRect.collidepoint(mx,my):
+                if colDisplayRect.collidepoint(mx,my): #to see if user is selecting the colour history palette
                     colDisplay=True
                 else:
                     colDisplay=False
@@ -311,20 +307,21 @@ while running:
                     stampSel=True
                 else:
                     stampSel=False
-                topSel1=topSel
+                topSel1=topSel                      #making seperate copies of variables
                 openSave1=openSave
                 leftRight1=leftRight
                 paletteSel1=paletteSel
                 stampSel1=stampSel
-            if evt.button==3:
+            if evt.button==3:       #right clicking
                 if tool=='shape': #shape tool adding points for each click
                     print(len(shapeList))
-                    if len(shapeList)>2:
-                        shapeDone=True
+                    if len(shapeList)>2: #polygon needs to have at least 3 points
+                        shapeDone=True  #booleans for setting values later on 
                         shapeUndoStep=True
-                        draw.polygon(screen,col,shapeList,size)
-                        screenCap=screen.subsurface(canvasRect).copy()
-                        screen.blit(screenCap,(canvasRect))
+                        draw.polygon(screen,col,shapeList,size) 
+                        screenCap=screen.subsurface(canvasRect).copy()  #copies the screen
+                        screen.blit(screenCap,(canvasRect)) #updating the screen
+                ###for dialogue text box
                 if tool=='rect':
                     tool='rectF'
                     iconList[5]=rectFUse
@@ -338,32 +335,31 @@ while running:
                     tool='eli'
                     iconList[7]=eliIcon
 
-            if evt.button==4: #scrolling up increases thickness
+            if evt.button==4: #scrolling up
                 if stampRect.collidepoint(mx,my): #for stamp page scrolling
                     stampPg='1'     #first stamp page
                 else:
-                    if size+1<41:
+                    if size+1<41: #increases thickness
                         size+=1
-            if evt.button==5: #scrolling down decreases thickness
+            if evt.button==5: #scrolling down
                 if stampRect.collidepoint(mx,my):
                     stampPg='2'     #second stamp page
                 else:
-                    if size-1>0:
+                    if size-1>0: #decreases thickness
                         size-=1
 
 
         if evt.type==MOUSEBUTTONUP:
-            if evt.button==1:
-                if tool!='shape' and tool!='none' or action=='stamp':
+            if evt.button==1: #to prevent scroll wheel from interfering
+                if tool!='shape' and tool!='none' or action=='stamp': #all tools + stamps 
                     if mxInCanvas:   #copying screen if the canvas has been altered
-                        fwdScreen=screen.subsurface(canvasRect).copy()
-                        undoList.append(fwdScreen)
+                        fwdScreen=screen.subsurface(canvasRect).copy() #adding the copied screen to the undo list
+                        undoList.append(fwdScreen) 
                         mxInCanvas=False
                     
-                if paletteRect.collidepoint(mx,my) and paletteSel: #displaying colours
-                    colList.append(col)
-                if len(colList)>5:
-                    colList.pop(0)
+                if paletteRect.collidepoint(mx,my) and paletteSel: 
+                    colList.append(col)     #adding colour to the colour history list
+                    colList.pop(0)          #removing the oldest colour from history
                 if colDisplayRect.collidepoint(mx,my) and colDisplay:
                     colPick=colList.index(col)
                     colList[colPick],colList[-1]=colList[-1],colList[colPick]
@@ -429,7 +425,10 @@ while running:
                     hEli=my-sy
                     eliDrawRect=Rect(sxEli,syEli,wEli,hEli)
                     eliDrawRect.normalize()
-                    draw.ellipse(screen,col,(eliDrawRect),size)
+                    try:
+                        draw.ellipse(screen,col,(eliDrawRect),size)
+                    except:
+                        pass
                     screenCap=screen.subsurface(canvasRect).copy()
                 print(stampSel)
                 if stampSel:
@@ -462,14 +461,6 @@ while running:
                         screen.blit(stamp,(mx-cw/2,my-ch/2))
                 screen.set_clip(None)
                     
-            #if opened:
-                #fwdScreen=screen.subsurface(canvasRect).copy()
-##                redoList*=0 #clearing the list
-##                redoList.append(bgList[0])
-##                undoList*=0
-##                fwdScreen=screen.subsurface(canvasRect).copy()
-##                undoList.append(fwdScreen) #######
-##                opened=False
             if bgChanged:
                 fwdScreen=screen.subsurface(canvasRect).copy()
                 bgChanged=False
@@ -812,7 +803,10 @@ while running:
             eliDrawRect=Rect(sxEli,syEli,wEli,hEli)
             eliDrawRect.normalize()
             print(eliDrawRect)
-            draw.ellipse(screen,col,(eliDrawRect))
+            try:
+                draw.ellipse(screen,col,(eliDrawRect))
+            except:
+                pass
             screenCap=screen.subsurface(canvasRect).copy()
 
         if pastScreen: #if there is drawing on the canvas when it is done in the past/undo steps
@@ -825,17 +819,21 @@ while running:
     toolWord='Tool: '+tool.upper()
     actionWord='Latest Action: '+action.upper()
     sizeWord='Size: '+str(size)+' (scroll to change size)'
+    posWord='Position: '+str(mx)+','+str(my)
     
     sizePic=arialFont.render(sizeWord,True,(BLACK))
-    screen.blit(sizePic,(925,630+30,185,155))
+    screen.blit(sizePic,(925,660,185,155))
     diaPic=arialFont.render(diaDisp,True,(BLACK))
-    screen.blit(diaPic,(925,645+30,185,155))
+    screen.blit(diaPic,(925,675+20,185,155))
     diaPic2=arialFont.render(diaDisp2,True,(BLACK))
-    screen.blit(diaPic2,(925,660+30,185,155))
+    screen.blit(diaPic2,(925,690+20,185,155))
     toolPic=arialFont.render(toolWord,True,(BLACK))
     screen.blit(toolPic,(925,615,185,155))
     actionPic=arialFont.render(actionWord,True,(BLACK))
     screen.blit(actionPic,(925,635,185,155))
+    posPic=arialFont.render(posWord,True,(BLACK))
+    screen.blit(posPic,(925,675,185,155))
+
     
     display.flip()
     if stampDone:
@@ -903,8 +901,5 @@ while running:
     if jebTimerCount>200:
         diaChange=False
         jebTimerCount=0
-    #print(action,diaDisp,diaDisp2)
-    #print(tool,tTool)
-    #print(tool,action)
     
 quit()

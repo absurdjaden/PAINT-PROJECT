@@ -4,9 +4,9 @@ from tkinter import *
 from tkinter import filedialog
 from math import *
 
-width,height=1200,800
-screen=display.set_mode((width,height))
-root=Tk()
+width,height=1200,800 
+screen=display.set_mode((width,height)) #setting screen
+root=Tk()   
 root.withdraw() #hides extra window
 font.init() 
 arialFont=font.SysFont('Arial',15) #font of the paint project
@@ -160,7 +160,6 @@ screen.blit(paletteWheel,paletteRect)
 draw.rect(screen,WHITE,canvasRect)
 
 #setting initial values
-click=False
 canvasIn=False
 rightClick=False
 paletteSel=False
@@ -195,7 +194,6 @@ action='none' #action selection default is none
 omx,omy=0,0 #setting value
 tTool=tool #temporary tool for stamps
 oTool=tool 
-oAction=action 
 size=5 #default size
 col=0,0,0,255 #default colour black
 oCol=col
@@ -349,7 +347,7 @@ while running:
                         size-=1
 
 
-        if evt.type==MOUSEBUTTONUP:
+        if evt.type==MOUSEBUTTONUP: #release of the mouse
             if evt.button==1: #to prevent scroll wheel from interfering
                 if tool!='shape' and tool!='none' or action=='stamp': #all tools + stamps 
                     if mxInCanvas:   #copying screen if the canvas has been altered
@@ -361,33 +359,32 @@ while running:
                     colList.append(col)     #adding colour to the colour history list
                     colList.pop(0)          #removing the oldest colour from history
                 if colDisplayRect.collidepoint(mx,my) and colDisplay:
-                    colPick=colList.index(col)
-                    colList[colPick],colList[-1]=colList[-1],colList[colPick]
+                    colPick=colList.index(col)  #finds colour that needs to be swapped
+                    colList[colPick],colList[-1]=colList[-1],colList[colPick] #swapping the colours with the one that colour that is picked
 
-            if tool=='shape' and shapeUndoStep:
-                print('removing step screen')
+            if tool=='shape' and shapeUndoStep: #removing the undo steps when the shape tool is used
                 shapeUndoStep=False
                 fwdScreen=screen.subsurface(canvasRect).copy()
                 undoList.append(fwdScreen)
                 
-            if shapeDone or tool!='shape':
+            if shapeDone or tool!='shape': #setting the list of points for the shape to be nothing when the old shape is finished
                 shapeList*=0
                 shapeDone=False
                 
-            if evt.button==1:
+            if evt.button==1: 
                 screen.set_clip(canvasRect)
-                if tool=='line' and canvasRect.collidepoint(mx,my):
+                if tool=='line' and canvasRect.collidepoint(mx,my): #drawing the actual line in the program
                     screenCap=screen.subsurface(canvasRect).copy()
                     draw.line(screen,col,(sx,sy),(mx,my),size)
                     fwdScreen=screen.subsurface(canvasRect).copy()
                     
-                if tool=='shape' and canvasRect.collidepoint(mx,my) and shapeDone==False:
+                if tool=='shape' and canvasRect.collidepoint(mx,my) and shapeDone==False: 
                     shapeList.append(mouse.get_pos())
-                    for term in range(len(shapeList)):
+                    for term in range(len(shapeList)):    #drawing each vertice of each shape
                         draw.circle(screen,col,shapeList[term],1)
                         print(shapeDone)
                     
-                if tool=='rect' and canvasRect.collidepoint(mx,my):
+                if tool=='rect' and canvasRect.collidepoint(mx,my):   #drawing the rectangle
                     screenCap=screen.subsurface(canvasRect).copy()
                     draw.rect(screen,col,(sx,sy,mx-sx,my-sy),size)
                     draw.rect(screen,col,(sx-round(size/2,1)+1,round(sy-size/2,1)+1,size,size))
@@ -396,14 +393,14 @@ while running:
                     draw.rect(screen,col,(sx-round(size/2,1)+1,round(my-size/2,1),size,size))
                     screenCap=screen.subsurface(canvasRect).copy()
                     
-                if tool=='rectF' and canvasRect.collidepoint(mx,my):
+                if tool=='rectF' and canvasRect.collidepoint(mx,my):   #drawing the filled rectangle
                     screenCap=screen.subsurface(canvasRect).copy()
                     draw.rect(screen,col,(sx,sy,mx-sx,my-sy))
                     screenCap=screen.subsurface(canvasRect).copy()
                     
-                if tool=='eli' and canvasRect.collidepoint(mx,my):
+                if tool=='eli' and canvasRect.collidepoint(mx,my):     #drawing the unfilled ellipse
                     screenCap=screen.subsurface(canvasRect).copy()
-                    if size>10:
+                    if size>10:      #setting max size for ellipse tool
                         size=10
                     sxEli=sx
                     syEli=sy
@@ -412,12 +409,12 @@ while running:
                     eliDrawRect=Rect(sxEli,syEli,wEli,hEli)
                     eliDrawRect.normalize()
                     try:
-                        draw.ellipse(screen,col,(eliDrawRect),size)
+                        draw.ellipse(screen,col,(eliDrawRect),size) #incase where the size of ellipse collides within the walls
                     except:
-                        draw.ellipse(screen,col,(eliDrawRect))
+                        draw.ellipse(screen,col,(eliDrawRect))  
                     screenCap=screen.subsurface(canvasRect).copy()                        
-                if tool=='eliF' and canvasRect.collidepoint(mx,my):
-                    if size>10:
+                if tool=='eliF' and canvasRect.collidepoint(mx,my):     #drawing the filled ellipses
+                    if size>10:     #setting max size for filled ellipse tool
                         size=10
                     sxEli=sx
                     syEli=sy
@@ -430,12 +427,11 @@ while running:
                     except:
                         pass
                     screenCap=screen.subsurface(canvasRect).copy()
-                print(stampSel)
-                if stampSel:
+                    
+                if stampSel:                #when stamp is selected, blitting the proper stamps for each page number
                     action='stamp'
-                    #tool='none'
                     diaDone=True
-                    if stampPg=='1':
+                    if stampPg=='1': #determining what stamp is selected
                         if stamp1Rect.collidepoint(mx,my):
                             stamp=stampList[0]
                         if stamp2Rect.collidepoint(mx,my):
@@ -444,7 +440,7 @@ while running:
                             stamp=stampList[2]
                         if stamp4Rect.collidepoint(mx,my):
                             stamp=stampList[3]
-                    if stampPg=='2':
+                    if stampPg=='2':   
                         if stamp1Rect.collidepoint(mx,my):
                             stamp=stampList[4]
                         if stamp2Rect.collidepoint(mx,my):
@@ -454,50 +450,50 @@ while running:
                         if stamp4Rect.collidepoint(mx,my):
                             stamp=stampList[7]
 
-                if action=='stamp':
+                if action=='stamp':         #blitting the stamps
                     if mb[0]==1 and canvasRect.collidepoint(mx,my):
                         cw=stamp.get_width()
                         ch=stamp.get_height()
-                        screen.blit(stamp,(mx-cw/2,my-ch/2))
+                        screen.blit(stamp,(mx-cw/2,my-ch/2)) #centering the stamps
                 screen.set_clip(None)
                     
-            if bgChanged:
-                fwdScreen=screen.subsurface(canvasRect).copy()
+            if bgChanged:  #when the background is changed
+                fwdScreen=screen.subsurface(canvasRect).copy() #added in later codes to undolist
                 bgChanged=False
-            click=False
-            paletteSel=False
+            paletteSel=False 
             print("mouse up")
 
                
     mx,my=mouse.get_pos()
     mb=mouse.get_pressed()
+    
     if mb[0]==1 and canvasRect.collidepoint(mx,my):
         mxInCanvas=True
     if canvasRect.collidepoint(mx,my):
-        canvasIn=True
+        canvasIn=True   #boolean for the stamps
     else:
         canvasIn=False
 
 ###drawing the rectangles and blitting images on screen
-    for q in range(len(iconList)):
+    for q in range(len(iconList)):  #connected lists, blitted
         screen.blit(iconList[q],toolButton[q])
     screen.blit(undoIcon,(undoRect))
     screen.blit(redoIcon,(redoRect))
     screen.blit(leftIcon,(leftRect))
     screen.blit(rightIcon,(rightRect))
-    screen.blit(jebIcon,(1120,650,175,155))
+    screen.blit(jebIcon,(1120,650,175,155)) #jebediah character in bottom right
 
     draw.rect(screen,WHITE,stampRect)
     draw.rect(screen,WHITE,diaRect)
 
     if stampPg=='1':
-        screen.blit(stampTList[0],(738,603,75,75))
+        screen.blit(stampTList[0],(738,603,75,75))  #blitting the stamps page 1
         screen.blit(stampTList[1],(738,687,75,75))
         screen.blit(stampTList[2],(823,603,75,75))
         screen.blit(stampTList[3],(823,687,75,75))
 
     if stampPg=='2':
-        screen.blit(stampTList[4],(738,603,75,75))
+        screen.blit(stampTList[4],(738,603,75,75))  #blitting the stamps on page 2
         screen.blit(stampTList[5],(738,687,75,75))
         screen.blit(stampTList[6],(823,603,75,75))
         screen.blit(stampTList[7],(823,687,75,75))
@@ -505,16 +501,16 @@ while running:
     if openChange: #changing bg list to default values
         bgList=[bg0,bg1,bg2,bg3,bg4,bg5]
         bgTList=[bg0T,bg1T,bg2T,bg3T,bg4T,bg5T]
-        screen.blit(bgTList[1],(955,15,90,50))
+        screen.blit(bgTList[1],(955,15,90,50)) #default thumbnails for background in the top right corner
         screen.blit(bgTList[-1],(1025,15,90,50))
         screen.blit(bgList[0],canvasRect)
-        screen.blit(myPic,(150+distX,80+distY,900,500)) #putting image in the center of canvas
-        openChange=False
+        screen.blit(myPic,(150+distX,80+distY,900,500)) #putting image in the center of canvas 
         redoList*=0 #clearing the list
         redoList.append(bgList[-1])
         undoList*=0
         fwdScreen=screen.subsurface(canvasRect).copy()
-        undoList.append(fwdScreen) #######
+        undoList.append(fwdScreen) 
+        openChange=False
     if bgChange:
         screen.blit(bgTList[1],(955,15,90,50))
         screen.blit(bgTList[-1],(1025,15,90,50))
@@ -523,10 +519,10 @@ while running:
         
                 
 ###hovering over objects
-    for q in range(len(toolList)):
+    for q in range(len(toolList)):  #list of each tool and its rect location for hovering
             if toolButton[q].collidepoint(mx,my):
                 screen.blit(hover,(toolButton[q]))
-    if undoRect.collidepoint(mx,my):
+    if undoRect.collidepoint(mx,my):    #undo,redo,right,and left arent in a list because they are smaller icons
         screen.blit(hover2,(undoRect))
     if redoRect.collidepoint(mx,my):
         screen.blit(hover2,(redoRect))
@@ -536,15 +532,15 @@ while running:
         screen.blit(hover3,(leftRect))
     
 ###selecting
-    if toolSel:
+    if toolSel:         
         if mb[0]==1:
-            for q in range(len(toolList)):
+            for q in range(len(toolList)):      #changing the icon to be what is selected
                 if toolButton[q].collidepoint(mx,my):
                     tool=toolList[q]
                     iconList=iconListRest[:]
                     iconList[q]=iconListUse[q]
 
-    if mb[0]==1 and redoRect.collidepoint(mx,my):
+    if mb[0]==1 and redoRect.collidepoint(mx,my): #special cases for different sied icons
         redoIcon=redoUse
     else:
         redoIcon=redoRest
@@ -608,9 +604,9 @@ while running:
                 screen.blit(myPic,(150+distX,80+distY,900,500)) #putting image in the center of canvas
                 print('opened',fName)
                 screen.set_clip(None)
-                openChange=True
+                openChange=True #booleans for further action in event loop+regular loop
                 opened=True
-                diaDisp=diaText[8]
+                diaDisp=diaText[8]  #dialogue changed to the index for open
                 diaDisp2=diaText2[8]
                 diaDone=True
                 
@@ -623,7 +619,7 @@ while running:
         if mb[0]==1 and saveRect.collidepoint(mx,my):
             action='save'
             try:
-                fName=filedialog.asksaveasfilename(defaultextension='.png')
+                fName=filedialog.asksaveasfilename(defaultextension='.png') #saving image as .png
                 image.save(screen.subsurface(canvasRect).copy(),fName)
                 print('saved as',fName)
             except:
@@ -631,20 +627,20 @@ while running:
                 diaDisp=diaText[9]
                 diaDone=True
     else:
-        diaDone=False
+        diaDone=False #if these actions arent completed, then the dialogue to be displayed should be from the regular tools
 
-    if leftRight:
-        if mb[0]==1 and leftRect.collidepoint(mx,my):
-            bgTList.append(bgTList[0])
+    if leftRight: #changing backgrounds
+        if mb[0]==1 and leftRect.collidepoint(mx,my):  
+            bgTList.append(bgTList[0]) #swapping the last with the first backgrounds
             bgTList.pop(0)
             bgList.append(bgList[0])
             bgList.pop(0)
-            leftRight=False
+            leftRight=False #booleans for further ifs
             bgChange=True
             bgChanged=True
-            action='left'
+            action='left' 
         if mb[0]==1 and rightRect.collidepoint(mx,my):
-            bgTadd=bgTList[-1]
+            bgTadd=bgTList[-1] #swapping the first with the last backgrounds
             bgTList.reverse()
             bgTList.append(bgTadd)
             bgTList.reverse()
@@ -660,30 +656,30 @@ while running:
             action='right'
 
 ###colour picking
-    if paletteRect.collidepoint(mx,my) and paletteSel:
+    if paletteRect.collidepoint(mx,my) and paletteSel: #selecting colours
         action='col palette'
         if mb[0]==1:
             col=screen.get_at((mx,my))
             r,g,b,a=screen.get_at((mx,my))
-            diaDisp=diaText[14]
+            diaDisp=diaText[14]     #dialogue is colour
             diaDisp2=diaText2[14]
-            diaDone=True
+            diaDone=True #makes it so tool dialogue will be skipped
     else:
         diaDone=False
         
-###displaying colours
+###displaying colours 
     for rectCol in range(5):
-        draw.rect(screen,(colList[rectCol]),(460,755-40*rectCol,30,40))
+        draw.rect(screen,(colList[rectCol]),(460,755-40*rectCol,30,40)) #from colour history palette
 
     if colDisplayRect.collidepoint(mx,my) and colDisplay:
         action='col pick'
         if mb[0]==1:
-            col=screen.get_at((mx,my))
+            col=screen.get_at((mx,my))  #setting the colour to be the one chosen in the colour history palette
             diaDone=True
             diaDisp=diaText[15]
             diaDisp2=diaText2[15]
 
-    screen.blit(colDisplayFrame,colDisplayRect)
+    screen.blit(colDisplayFrame,colDisplayRect) #colour history frame
 
 ###spray paint tool
     if tool=='spray':
@@ -708,37 +704,37 @@ while running:
             sprayY3=my+sprayY3 
 
 ###size of tool
-    if tool=='pencil':
+    if tool=='pencil': #setting maximum sizes for pencil
         if size>5:
             size=5
-    if tool=='eli' or tool=='eliF' or tool=='shape':
+    if tool=='eli' or tool=='eliF' or tool=='shape': #and for ellipse and shape tools
         if size>10:
             size=10
 
-    tTool=tool
+    tTool=tool #temporary tool saved for when the tool is set to none to make the stamps not have tools underneath them
     if action=='stamp':
-        oAction=action
         tTool=tool
         tool='none'
         screen.set_clip(canvasRect)
-        screen.blit(undoList[-1],canvasRect)
+        screen.blit(undoList[-1],canvasRect)    #whole block is a preview of where the stamp is/stamp follows cursor
         cw=stamp.get_width()
         ch=stamp.get_height()
-        screen.blit(stamp,(mx-cw/2,my-ch/2))         
+        screen.blit(stamp,(mx-cw/2,my-ch/2))    #centering the stamp    
         screen.set_clip(None)
         stampDone=True
     
-    if toolRect.collidepoint(mx,my) and mb[0]==1 or col!=oCol or colDisplay:
-        if action!='none':
+    if toolRect.collidepoint(mx,my) and mb[0]==1 or col!=oCol or colDisplay: #checks to see if any tools/actions/buttons are used
+        if action!='none': #stops using the stamp if new tool/action/col is picked
             action='none'
-            screen.blit(undoList[-1],canvasRect)
+            screen.blit(undoList[-1],canvasRect) 
         
 ###using tool
-    if canvasRect.collidepoint(mx,my) and mb[0]==1:
+    if canvasRect.collidepoint(mx,my) and mb[0]==1:     
         screen.set_clip(canvasRect)
-        if tool=='pencil':
+        if tool=='pencil':          #pencil tool
             draw.line(screen,col,(omx,omy),(mx,my),size)
-        if tool=='eraser':
+            
+        if tool=='eraser':          #eraser tool
             dx=mx-omx
             dy=my-omy
             hyp=sqrt(dx**2+dy**2)
@@ -747,24 +743,25 @@ while running:
             for i in range(0,int(hyp)):
                 dotx=int(omx-size//2+i*dx/hyp)
                 doty=int(omy-size//2+i*dy/hyp)
-                screen.blit(bgList[0],(dotx,doty,size*2,size*2),(dotx-150,doty-80,size*2,size*2))
-        if tool=='spray':
+                screen.blit(bgList[0],(dotx,doty,size*2,size*2),(dotx-150,doty-80,size*2,size*2)) #draws the background image in a square on top of the image
+                
+        if tool=='spray':   #spray paint tool
             draw.circle(screen,col,(sprayX,sprayY),0) #outer circle
             draw.circle(screen,col,(sprayX2,sprayY2),0) #middle circle
             draw.circle(screen,col,(sprayX3,sprayY3),0) #inner circle
             
-        if tool=='line':
+        if tool=='line': #preview of line tool
             screen.blit(undoList[-1],canvasRect)
             draw.line(screen,col,(sx,sy),(mx,my),size)
             
-        if tool=='rect':
+        if tool=='rect': #preview of rectangle tool
             screen.blit(undoList[-1],canvasRect)
             draw.rect(screen,col,(sx,sy,mx-sx,my-sy),size)
             draw.rect(screen,col,(sx-round(size/2,1)+1,round(sy-size/2,1)+1,size,size))
             draw.rect(screen,col,(mx-round(size/2,1),round(my-size/2,1),size,size))
             draw.rect(screen,col,(mx-round(size/2,1),round(sy-size/2,1)+1,size,size))
             draw.rect(screen,col,(sx-round(size/2,1)+1,round(my-size/2,1),size,size))
-        
+         
         if tool=='brush':
             if omx!=mx or omy!=my:
                 dx=mx-omx
@@ -778,7 +775,7 @@ while running:
                     doty=int(omy+i*dy/hyp)
                     draw.circle(screen,col,(dotx,doty),size)
         
-        if tool=='eli':
+        if tool=='eli': #preview of ellipse tool
             screen.blit(undoList[-1],canvasRect)
             sxEli=sx
             syEli=sy
@@ -791,10 +788,12 @@ while running:
                 draw.ellipse(screen,col,(eliDrawRect),size)
             except:
                 draw.ellipse(screen,col,(eliDrawRect))
-        if tool=='rectF':
+                
+        if tool=='rectF': #preview of filled rectangle tool
             screen.blit(undoList[-1],canvasRect)
             draw.rect(screen,col,(sx,sy,mx-sx,my-sy))
-        if tool=='eliF':
+            
+        if tool=='eliF':  #preview of filled ellipse tool
             screen.blit(undoList[-1],canvasRect)
             sxEli=sx
             syEli=sy
@@ -816,12 +815,12 @@ while running:
         screen.set_clip(None)
 
 ##blitting final information
-    toolWord='Tool: '+tool.upper()
+    toolWord='Tool: '+tool.upper()      #setting up the pregenerated text with the dynamic values (size,mx and my,tool,action)
     actionWord='Latest Action: '+action.upper()
     sizeWord='Size: '+str(size)+' (scroll to change size)'
     posWord='Position: '+str(mx)+','+str(my)
     
-    sizePic=arialFont.render(sizeWord,True,(BLACK))
+    sizePic=arialFont.render(sizeWord,True,(BLACK)) #rendering and blitting each dialogue + texts in the text box
     screen.blit(sizePic,(925,660,185,155))
     diaPic=arialFont.render(diaDisp,True,(BLACK))
     screen.blit(diaPic,(925,675+20,185,155))
@@ -833,21 +832,20 @@ while running:
     screen.blit(actionPic,(925,635,185,155))
     posPic=arialFont.render(posWord,True,(BLACK))
     screen.blit(posPic,(925,675,185,155))
-
     
     display.flip()
-    if stampDone:
+
+    if stampDone:   #setting the tool back to its original value, before using the stamp tool
         tool=tTool
         stampDone=False
     toolSel=False
-    omx=mx 
+    omx=mx  #updating tools with the new tools
     omy=my
     oTool=tool
-    oAction=action
     oCol=col
     oDiaDisp=diaDisp
     if diaDone!=True:
-        if topSel1 or openSave1 or leftRight1 or paletteSel1 or colDisplay or stampSel1:
+        if topSel1 or openSave1 or leftRight1 or paletteSel1 or colDisplay or stampSel1: #dialogue box is the text from before
             if action=='open':
                 diaDisp=diaText[8]
                 diaDisp2=diaText2[8]
@@ -871,22 +869,22 @@ while running:
                 diaDisp2=diaText2[16]
             
         else:
-            for x in range(len(toolList)):
+            for x in range(len(toolList)):  #dialogue is the tools
                 if tool==toolList[x]:
                     diaDisp=diaText[x]
                     diaDisp2=diaText2[x]
-    if bgChanged:
+    if bgChanged:   #when you change the background undo and redo are reset *new image
         undoList*=0
         undoList.append(bgList[0])
         redoList*=0
         redoList.append(bgList[0])
         
-    if oDiaDisp!=diaDisp:
+    if oDiaDisp!=diaDisp: #when the dialogue changes, character is allowed to speak
         diaChange=True
-        jebTimerCount=0
-#counter of time for Jebediah at the bottom right corner
-    jebIcon=jeb1
-    if diaChange:
+        jebTimerCount=0 #number counter that ranges from positive to negative integers
+###counter of time for Jebediah at the bottom right corner 
+    jebIcon=jeb1 #default state of Jebediah is closing mouth
+    if diaChange: 
         jebTimerCount+=1
     if diaChange:
         jebCount+=jebMulti
@@ -894,9 +892,9 @@ while running:
             jebMulti*=-1
         if jebCount<-15:
             jebMulti*=-1
-        if jebCount>0:
+        if jebCount>0:  #when counter is positive character opens their mouth
             jebIcon=jeb1
-        else:
+        else:   #otherwise character is closing their mouth
             jebIcon=jeb2
     if jebTimerCount>200:
         diaChange=False
